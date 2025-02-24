@@ -1,0 +1,1 @@
+"F:\Program Files\youtube-download-locally\.venv\Scripts\python.exe" "F:\Program Files\youtube-download-locally\app.py" 
