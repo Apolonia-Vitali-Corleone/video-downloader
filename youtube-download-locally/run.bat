@@ -1,1 +1,1 @@
-"F:\Program Files\youtube-download-locally\.venv\Scripts\python.exe" "F:\Program Files\youtube-download-locally\app.py" 
+".venv\Scripts\python.exe" "app.py" 
