@@ -10,25 +10,29 @@
 
 如果你自己使用，需要修改的内容：
 
-`constant.py`
+`config.py`
 
-```
-class Constant:
-    DIR = "F:\Video"
-    PROXY = 'http://127.0.0.1:4343'
+```jsoN
+# 使用字典存储配置
+config = {
+    'DIR': "F:\Video",
+    'PROXY': 'http://127.0.0.1:4343',
+}
 ```
 
 改为你自己的`默认目录`和`代理（为了科学上网）`
 
 
 
-# 可以下载的
+# 支持下载平台
 
 youtube
 
 tiktok
 
-# 不能下载的
-
 哔哩哔哩
+
+
+
+# 
 
