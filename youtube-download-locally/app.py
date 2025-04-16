@@ -9,7 +9,7 @@ def download_video(video_url, noplaylist, save_path):
     # 确保输出路径存在
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    print("shabi")
+    print("shabi222")
     try:
         # 配置yt-dlp选项
         ydl_opts = {
