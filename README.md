@@ -14,7 +14,7 @@ So if you need a proxy, please add the proxy parameter.
 
 `config.py`
 
-```jsoN
+```python
 # Use a dictionary to store configuration
 config = {
     'DIR': "F:\Video",
