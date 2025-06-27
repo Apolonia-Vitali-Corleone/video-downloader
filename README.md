@@ -30,7 +30,7 @@ If you can directly connect to all video platforms, you do not need to use the `
 
 ```python
 config = {
-    'DIR': "F:\Video",
+    'DIR': "F:\Video"
 }
 ```
 
