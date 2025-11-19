@@ -2,7 +2,7 @@
 
 Windows: Double-click `run.bat` to automatically open a web interface for downloading videos. Just paste various video links into it.
 
-![image-20250627234350524](./README.assets/image-20250627234350524.png)
+![image-20250627234350524](./docs/assets/image-20250627234350524.png)
 
 
 
