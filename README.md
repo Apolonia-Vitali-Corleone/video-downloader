@@ -1,8 +1,15 @@
 # Video Downloader
 
-A web-based video downloader supporting YouTube, TikTok, Bilibili, Pornhub and more.
+A modern web-based video downloader with support for YouTube, TikTok, Bilibili, Pornhub and hundreds of other platforms powered by yt-dlp.
 
-![image-20250627234350524](./docs/assets/image-20250627234350524.png)
+## Features
+
+- 🌐 **Web Interface** - User-friendly GUI, no command-line knowledge required
+- 🚀 **High Quality** - Automatically downloads best available video and audio quality
+- 🔄 **Smart Downloads** - Duplicate detection prevents re-downloading existing files
+- 🌍 **Proxy Support** - Configure proxy for geo-restricted content
+- 📋 **Playlist Support** - Download entire playlists with a single click
+- 💻 **Cross-Platform** - Works on Windows, macOS, and Linux
 
 ## Installation
 
@@ -14,86 +21,120 @@ pip install -r requirements.txt
 
 ### 2. Install FFmpeg
 
-Download FFmpeg static binaries from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+FFmpeg is required for video processing and merging.
 
-Extract and place the following files in `./ffmpeg/bin/` folder:
-- `ffmpeg.exe` (or `ffmpeg` on Mac/Linux)
-- `ffprobe.exe` (or `ffprobe` on Mac/Linux)
-- `ffplay.exe` (or `ffplay` on Mac/Linux)
+1. Download FFmpeg static binaries from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+2. Extract the downloaded archive
+3. Copy the following executables to `./ffmpeg/bin/` directory:
+   - `ffmpeg` (or `ffmpeg.exe` on Windows)
+   - `ffprobe` (or `ffprobe.exe` on Windows)
+   - `ffplay` (or `ffplay.exe` on Windows)
 
 ### 3. Configure Settings
 
-Edit `config.py` to set your download directory and proxy (if needed):
+Edit `config.py` to customize your download directory and proxy settings:
 
 ```python
 config = {
-    # Download directory (use r"" raw string to avoid escape issues)
+    # Download directory (use raw string r"" to avoid path escape issues)
     'DIR': r"D:\Video",
 
-    # Proxy configuration (set to None if not needed)
+    # Proxy configuration (set to None if not using a proxy)
     'PROXY': 'http://127.0.0.1:7890',  # or None
 
-    # FFmpeg path (default: ./ffmpeg/bin/)
+    # FFmpeg binary path
     'FFMPEG_PATH': os.path.join(".", "ffmpeg", "bin")
 }
 ```
 
 ## Usage
 
+### Start the Application
+
 **Windows:** Double-click `run.bat`
 
-**Mac/Linux:** Run `bash run.sh` or `python app.py`
+**macOS/Linux:** Run `bash run.sh` or `python app.py`
 
-The web interface will automatically open at http://localhost:7860/
+The web interface will automatically open in your browser at `http://localhost:7860/`
 
-Just paste video links and click download!
+### Download Videos
 
-## Proxy Configuration
+1. Paste the video URL into the input field
+2. Click the download button
+3. Wait for the download to complete
+4. Find your video in the configured download directory
 
-### With Proxy (for users in Mainland China)
+## Configuration Guide
 
-Due to network restrictions in Mainland China, a proxy may be required for accessing some platforms.
+### Proxy Settings
 
-Edit `config.py`:
+#### For Users Behind Firewalls (e.g., Mainland China)
 
-```python
-config = {
-    'DIR': r"F:\Video",
-    'PROXY': 'http://127.0.0.1:4343',  # Your proxy address
-    'FFMPEG_PATH': os.path.join(".", "ffmpeg", "bin")
-}
-```
-
-### Without Proxy (for international users)
-
-If you can directly access video platforms, set proxy to `None`:
+If you need a proxy to access certain video platforms, configure it in `config.py`:
 
 ```python
 config = {
     'DIR': r"F:\Video",
-    'PROXY': None,  # No proxy
+    'PROXY': 'http://127.0.0.1:4343',  # Your proxy server address
     'FFMPEG_PATH': os.path.join(".", "ffmpeg", "bin")
 }
 ```
 
-## Supported Video Platforms
+#### For International Users
 
-Tested and working:
+If you have direct access to video platforms, disable the proxy:
 
-- YouTube
-- TikTok
-- Bilibili
-- Pornhub
+```python
+config = {
+    'DIR': r"F:\Video",
+    'PROXY': None,  # No proxy needed
+    'FFMPEG_PATH': os.path.join(".", "ffmpeg", "bin")
+}
+```
 
-*Note: Many other platforms are supported via yt-dlp. See [yt-dlp supported sites](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)*
+### Download Directory
 
-## Features
+Specify your preferred download location using an absolute path:
 
-- Web-based GUI (no command-line needed)
-- Proxy support for geo-restricted content
-- Cross-platform (Windows, Mac, Linux)
-- Automatic duplicate detection (won't re-download existing files)
-- Best quality downloads (automatically selects best video+audio)
-- Playlist support
-- Custom save path configuration
+- **Windows:** `r"D:\Videos\Downloads"`
+- **macOS/Linux:** `"/home/username/Videos"` or `"~/Videos"`
 
+*Note: Use raw strings (r"") on Windows to avoid backslash escape issues*
+
+## Supported Platforms
+
+### Verified Platforms
+
+- ✅ YouTube
+- ✅ TikTok
+- ✅ Bilibili
+- ✅ Pornhub
+
+### Additional Platforms
+
+This tool supports **1000+ video platforms** through yt-dlp. For a complete list, see [yt-dlp supported sites](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md).
+
+## Troubleshooting
+
+### FFmpeg Not Found
+
+Ensure FFmpeg executables are placed in `./ffmpeg/bin/` directory and the path is correctly configured in `config.py`.
+
+### Download Fails
+
+- Check your internet connection
+- Verify the video URL is valid and accessible
+- If accessing geo-restricted content, ensure your proxy is configured correctly
+- Some platforms may require authentication or have anti-bot protection
+
+### Port Already in Use
+
+If port 7860 is occupied, edit `app.py` to change the port number in the `app.launch()` call.
+
+## License
+
+This project is for educational and personal use only. Please respect video platform terms of service and copyright laws.
+
+## Credits
+
+Built with [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [Gradio](https://gradio.app/).
