@@ -30,23 +30,38 @@ def get_ffmpeg_path():
 FFMPEG_PATH, FFPROBE_PATH = get_ffmpeg_path()
 
 
-# -------------------------- 原有下载函数：仅补充 ffmpeg 配置 + 同名拒绝下载 --------------------------
+# -------------------------- 原有下载函数：优化网络请求 + ffmpeg 配置 + 同名拒绝下载 --------------------------
 def download_video(video_url, noplaylist, save_path):
     # confirm the save_path exist
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     try:
-        # 新增：先获取视频信息，判断文件是否已存在（同名拒绝下载）
-        ydl_info_opts = {
-            'quiet': True,
-            'no_warnings': True,
-            'geo-bypass': True,
-            'proxy': config['PROXY'] if 'PROXY' in config else None
+        # config yt-dlp（一次性配置所有选项）
+        ydl_opts = {
+            'format': 'bestvideo+bestaudio/best',  # the best quality
+            'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),  # Output Template
+            'noplaylist': noplaylist,  # By default, only download a single video, not the playlist.
+            'quiet': False,  # Display download progress.
+            'progress': True,  # Display progress bar.
+            'geo-bypass': True,  # Bypass geo-restrictions (if any).
+            # 指定 ffmpeg 路径（解决依赖问题）
+            'ffmpeg_location': os.path.dirname(FFMPEG_PATH),
+            'ffprobe_location': FFPROBE_PATH,
+            'overwrites': False,  # 强制关闭覆盖，双重保障
+            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         }
-        with yt_dlp.YoutubeDL(ydl_info_opts) as ydl:
+
+        # Add proxy if it exists and is not None（只在需要时添加代理）
+        if config.get('PROXY'):
+            ydl_opts['proxy'] = config['PROXY']
+
+        # 使用同一个 ydl 对象：先获取信息检查文件，再下载（避免重复请求）
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            # 获取视频信息，判断文件是否已存在
             info = ydl.extract_info(video_url, download=False)
-            video_title = info.get('title', None)
-            ext = info.get('ext', 'mp4')  # 获取视频后缀
+            video_title = info.get('title', 'video')
+            ext = info.get('ext', 'mp4')
+
             # 生成最终文件名（和下载后一致）
             final_filename = f"{video_title}.{ext}"
             final_file_path = os.path.join(save_path, final_filename)
@@ -59,29 +74,8 @@ def download_video(video_url, noplaylist, save_path):
                     'error': 'Duplicate file'
                 }
 
-        # config yt-dlp（仅补充 ffmpeg 相关配置，其他保持不变）
-        ydl_opts = {
-            'format': 'bestvideo+bestaudio/best',  # the best quality
-            'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),  # Output Template
-            'noplaylist': noplaylist,  # By default, only download a single video, not the playlist.
-            'quiet': False,  # Display download progress.
-            'progress': True,  # Display progress bar.
-            'geo-bypass': True,  # Bypass geo-restrictions (if any).
-            # 新增：指定 ffmpeg 路径（解决依赖问题）
-            'ffmpeg_location': os.path.dirname(FFMPEG_PATH),
-            'ffprobe_location': FFPROBE_PATH,
-            'overwrites': False,  # 强制关闭覆盖，双重保障
-            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        }
-
-        # Add proxy if it exists in config（原有逻辑不变）
-        if 'PROXY' in config:
-            ydl_opts['proxy'] = config['PROXY']
-
-        # Fetch video information.（原有逻辑不变）
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            # 已在前面获取过 info，这里直接下载（避免重复请求）
-            ydl.download([video_url])
+            # 文件不存在，开始下载（复用已获取的 info，不会重复请求）
+            ydl.process_info(info)
 
         return {
             'status': 'success',

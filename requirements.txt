@@ -1,0 +1,11 @@
+# Video Downloader Dependencies
+
+# Web UI framework
+gradio>=4.0.0
+
+# Video download engine (actively maintained fork of youtube-dl)
+yt-dlp>=2024.0.0
+
+# Note: FFmpeg is required but not a Python package
+# Please download FFmpeg binaries from: https://ffmpeg.org/download.html
+# Extract and place ffmpeg.exe, ffprobe.exe, ffplay.exe in ./ffmpeg/bin/ folder
